@@ -1,0 +1,7 @@
+TEAM_ID=
+
+PRODUCT_NAME=Kotlinconfclone
+PRODUCT_BUNDLE_IDENTIFIER=io.kotelliada.kotlinconf.Kotlinconfclone$(TEAM_ID)
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0
