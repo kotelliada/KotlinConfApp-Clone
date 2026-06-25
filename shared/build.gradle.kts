@@ -58,6 +58,9 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
             implementation(libs.ktor.client.core)
+            implementation(libs.multiplatform.markdown.renderer)
+            implementation(libs.androidx.datastore.core)
+            implementation(libs.androidx.datastore.preferences.core)
         }
 
         commonTest.dependencies {
