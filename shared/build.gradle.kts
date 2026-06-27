@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.metro)
 }
 
 kotlin {
@@ -79,6 +80,11 @@ kotlin {
     }
 
     // jvmToolchain(21)
+}
+
+metro {
+    // Enable (extremely) verbose debug logging
+    debug = true
 }
 
 dependencies {

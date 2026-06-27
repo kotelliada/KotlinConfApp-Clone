@@ -4,6 +4,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.kotelliada.kotlinconf.getPlatform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +19,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+// @ContributesBinding automatically binds your implementation to its interface
+// and contributes it to any graph with the matching scope.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+@Inject
 class ApplicationStorageImpl(
     private val settings: DataStore<Preferences>,
     appScope: CoroutineScope
