@@ -32,6 +32,12 @@ kotlin {
             implementation(projects.shared)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.foundation)
+            implementation(libs.decompose.extensionsCompose)
+            implementation(kotlinWrappers.browser)
+        }
+
+        jsMain.dependencies {
+
         }
     }
 }

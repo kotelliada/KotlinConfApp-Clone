@@ -26,6 +26,11 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
+
+            export(libs.decompose)
+            export(libs.essenty.lifecycle)
+            // Optional, only if you need state preservation on Darwin (Apple) targets
+            export(libs.essenty.stateKeeper)
         }
     }
     
@@ -62,6 +67,8 @@ kotlin {
             implementation(libs.multiplatform.markdown.renderer)
             implementation(libs.androidx.datastore.core)
             implementation(libs.androidx.datastore.preferences.core)
+            api(libs.decompose)
+            implementation(libs.decompose.extensionsCompose)
         }
 
         commonTest.dependencies {

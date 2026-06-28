@@ -12,6 +12,7 @@ kotlin {
         implementation(compose.desktop.currentOs)
         implementation(libs.kotlinx.coroutinesSwing)
         implementation(projects.shared)
+        implementation(libs.decompose.extensionsCompose)
     }
 }
 

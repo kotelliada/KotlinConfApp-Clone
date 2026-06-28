@@ -14,14 +14,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import io.kotelliada.kotlinconf.root.PreviewRootComponent
+import io.kotelliada.kotlinconf.root.RootComponent
 import org.jetbrains.compose.resources.painterResource
 
 import kotlinconfclone.shared.generated.resources.Res
 import kotlinconfclone.shared.generated.resources.compose_multiplatform
 
 @Composable
-@Preview
-fun App() {
+fun App(rootComponent: RootComponent) {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
@@ -46,4 +47,10 @@ fun App() {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun AppPreview() {
+    App(rootComponent = PreviewRootComponent())
 }

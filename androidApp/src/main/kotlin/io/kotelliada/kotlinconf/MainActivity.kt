@@ -6,6 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.arkivanov.decompose.defaultComponentContext
+import io.kotelliada.kotlinconf.root.DefaultRootComponent
+import io.kotelliada.kotlinconf.root.PreviewRootComponent
 
 class MainActivity : ComponentActivity() {
 
@@ -13,8 +16,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        val rootComponent = DefaultRootComponent(
+            componentContext = defaultComponentContext()
+        )
+
         setContent {
-            App()
+            App(rootComponent = rootComponent)
         }
     }
 }
@@ -22,5 +29,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App()
+    App(rootComponent = PreviewRootComponent())
 }
