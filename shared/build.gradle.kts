@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.metro)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -69,6 +70,7 @@ kotlin {
             implementation(libs.androidx.datastore.preferences.core)
             api(libs.decompose)
             implementation(libs.decompose.extensionsCompose)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {

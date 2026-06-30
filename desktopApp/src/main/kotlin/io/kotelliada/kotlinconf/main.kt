@@ -18,7 +18,8 @@ fun main() {
     val lifecycle = LifecycleRegistry()
     val rootComponent = runOnUiThread {
         DefaultRootComponent(
-            componentContext = DefaultComponentContext(lifecycle = lifecycle)
+            componentContext = DefaultComponentContext(lifecycle = lifecycle),
+            appGraph = appGraph
         )
     }
 

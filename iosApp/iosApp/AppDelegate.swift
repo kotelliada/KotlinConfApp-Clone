@@ -9,6 +9,7 @@ import Shared
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let rootComponent: RootComponent = DefaultRootComponent(
-        componentContext: DefaultComponentContext(lifecycle: ApplicationLifecycle())
+        componentContext: DefaultComponentContext(lifecycle: ApplicationLifecycle()),
+        appGraph: MainViewControllerKt.iosAppGraph
     )
 }

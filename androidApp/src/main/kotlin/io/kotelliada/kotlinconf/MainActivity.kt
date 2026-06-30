@@ -17,7 +17,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val rootComponent = DefaultRootComponent(
-            componentContext = defaultComponentContext()
+            componentContext = defaultComponentContext(),
+            appGraph = (applicationContext as KotlinConfApplication).appGraph
         )
 
         setContent {

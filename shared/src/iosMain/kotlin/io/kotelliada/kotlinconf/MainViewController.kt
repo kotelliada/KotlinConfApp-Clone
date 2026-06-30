@@ -6,7 +6,7 @@ import io.kotelliada.kotlinconf.di.AppGraph
 import io.kotelliada.kotlinconf.di.DataStoreFactory
 import io.kotelliada.kotlinconf.root.RootComponent
 
-private val appGraph = createGraphFactory<AppGraph.Factory>()
+val iosAppGraph = createGraphFactory<AppGraph.Factory>()
     .create(DataStoreFactory())
 
 fun MainViewController(rootComponent: RootComponent) = ComposeUIViewController {

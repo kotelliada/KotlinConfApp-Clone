@@ -24,7 +24,8 @@ fun main() {
 
     val lifecycle = LifecycleRegistry()
     val rootComponent = DefaultRootComponent(
-        componentContext = DefaultComponentContext(lifecycle = lifecycle)
+        componentContext = DefaultComponentContext(lifecycle = lifecycle),
+        appGraph = appGraph
     )
 
     lifecycle.attachToDocument()
