@@ -13,6 +13,7 @@ kotlin {
         implementation(libs.kotlinx.coroutinesSwing)
         implementation(projects.shared)
         implementation(libs.decompose.extensionsCompose)
+        implementation(libs.kermit)
     }
 }
 

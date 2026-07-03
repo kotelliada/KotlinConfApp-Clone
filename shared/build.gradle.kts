@@ -71,6 +71,7 @@ kotlin {
             api(libs.decompose)
             implementation(libs.decompose.extensionsCompose)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kermit)
         }
 
         commonTest.dependencies {
