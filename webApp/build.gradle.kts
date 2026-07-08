@@ -35,9 +35,5 @@ kotlin {
             implementation(libs.decompose.extensionsCompose)
             implementation(kotlinWrappers.browser)
         }
-
-        jsMain.dependencies {
-
-        }
     }
 }

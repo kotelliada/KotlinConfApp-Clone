@@ -10,6 +10,7 @@ import dev.zacsweers.metro.createGraphFactory
 import io.kotelliada.kotlinconf.di.AppGraph
 import io.kotelliada.kotlinconf.di.DataStoreFactory
 import io.kotelliada.kotlinconf.root.DefaultRootComponent
+import kotlinx.coroutines.Dispatchers
 import web.dom.DocumentVisibilityState
 import web.dom.document
 import web.dom.visible
@@ -20,7 +21,10 @@ import web.events.addEventListener
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     val appGraph = createGraphFactory<AppGraph.Factory>()
-        .create(DataStoreFactory())
+        .create(
+            dataStoreFactory = DataStoreFactory(),
+            ioDispatcher = Dispatchers.Default
+        )
 
     val lifecycle = LifecycleRegistry()
     val rootComponent = DefaultRootComponent(
@@ -31,7 +35,7 @@ fun main() {
     lifecycle.attachToDocument()
 
     ComposeViewport {
-        App(rootComponent = rootComponent)
+        App(component = rootComponent)
     }
 }
 

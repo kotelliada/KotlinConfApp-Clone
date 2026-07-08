@@ -10,10 +10,14 @@ import dev.zacsweers.metro.createGraphFactory
 import io.kotelliada.kotlinconf.di.AppGraph
 import io.kotelliada.kotlinconf.di.DataStoreFactory
 import io.kotelliada.kotlinconf.root.DefaultRootComponent
+import kotlinx.coroutines.Dispatchers
 
 fun main() {
     val appGraph = createGraphFactory<AppGraph.Factory>()
-        .create(DataStoreFactory())
+        .create(
+            dataStoreFactory = DataStoreFactory(),
+            ioDispatcher = Dispatchers.IO
+        )
 
     val lifecycle = LifecycleRegistry()
     val rootComponent = runOnUiThread {
@@ -32,7 +36,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             title = "Kotlinconfclone",
         ) {
-            App(rootComponent = rootComponent)
+            App(component = rootComponent)
         }
     }
 }

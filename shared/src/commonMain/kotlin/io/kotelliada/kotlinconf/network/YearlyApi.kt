@@ -1,14 +1,14 @@
 package io.kotelliada.kotlinconf.network
 
-import io.kotelliada.kotlinconf.utils.Logger
+import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
-import io.ktor.client.request.get
 import kotlinx.coroutines.CancellationException
 
 class YearlyApi(
     private val httpClient: HttpClient,
-    private val logger: Logger
+    private val globalLogger: Logger
 ) {
+    private val logger = Logger.withTag("YearlyApi")
 
     suspend fun downloadAsset(path: String): String? {
         throw NotImplementedError()
@@ -20,7 +20,7 @@ class YearlyApi(
         } catch (ex: CancellationException) {
             throw ex
         } catch (ex: Throwable) {
-            logger.log("YearlyApi", "API call failed: ${ex.message}")
+            logger.e { "API call failed: ${ex.message}" }
             null
         }
     }
