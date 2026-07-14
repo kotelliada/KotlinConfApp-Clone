@@ -1,4 +1,10 @@
 <resources>
+    <!-- Common -->
+    <string name="loading">Loading…</string>
+
+    <!-- Actions -->
+    <string name="action_error_reload">Reload</string>
+
     <string name="privacy_notice_reject">Reject</string>
     <string name="privacy_notice_accept">Accept</string>
 
