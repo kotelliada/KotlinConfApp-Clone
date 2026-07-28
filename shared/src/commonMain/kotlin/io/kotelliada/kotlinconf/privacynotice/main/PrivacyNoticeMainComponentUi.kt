@@ -60,7 +60,7 @@ fun PrivacyNoticeMainComponentUi(
             icon = Res.drawable.arrow_right_24,
             size = ActionSize.Large,
             enabled = true,
-            onClick = {}
+            onClick = { component.onReadPrivacyNoticeClicked() }
         )
     }
 }

@@ -1,18 +1,30 @@
 package io.kotelliada.kotlinconf.privacynotice
 
+import co.touchlab.kermit.Logger
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.instancekeeper.getOrCreate
+import io.kotelliada.kotlinconf.ConferenceService
 import io.kotelliada.kotlinconf.privacynotice.details.DefaultPrivacyNoticeDetailsComponent
 import io.kotelliada.kotlinconf.privacynotice.details.PrivacyNoticeDetailsComponent
 import io.kotelliada.kotlinconf.privacynotice.main.DefaultPrivacyNoticeMainComponent
 import io.kotelliada.kotlinconf.privacynotice.main.PrivacyNoticeMainComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.MainCoroutineDispatcher
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 
 class DefaultPrivacyNoticeComponent(
     componentContext: ComponentContext,
+    private val conferenceService: ConferenceService,
+    private val mainDispatcher: MainCoroutineDispatcher,
+    private val defaultDispatcher: CoroutineDispatcher,
+    private val globalLogger: Logger,
     private val onRejectNotice: () -> Unit,
     private val onAcceptNotice: () -> Unit,
     private val onAppTermsOfUse: () -> Unit,
@@ -30,6 +42,21 @@ class DefaultPrivacyNoticeComponent(
             childFactory = ::createChild
         )
 
+    private val logger = globalLogger.withTag("PrivacyNoticeComponent")
+
+    private val viewModel = instanceKeeper.getOrCreate {
+        PrivacyNoticeViewModel(
+            conferenceService = conferenceService,
+            mainDispatcher = mainDispatcher,
+            logger = logger
+        )
+    }
+
+    override val uiState: StateFlow<UiState>
+        get() {
+            return viewModel.uiState
+        }
+
     override fun onRejectNoticeClicked() {
     }
 
@@ -37,6 +64,11 @@ class DefaultPrivacyNoticeComponent(
     }
 
     override fun onAppTermsOfUseClicked() {
+    }
+
+    override fun onRetryClicked() {
+        logger.d { "onRetryClicked" }
+        viewModel.onRetryClicked()
     }
 
     private fun createChild(
@@ -52,13 +84,23 @@ class DefaultPrivacyNoticeComponent(
     private fun createPrivacyNoticeMainComponent(
         componentContext: ComponentContext
     ): PrivacyNoticeMainComponent {
-        return DefaultPrivacyNoticeMainComponent(componentContext)
+        return DefaultPrivacyNoticeMainComponent(
+            componentContext = componentContext,
+            onReadPrivacyNotice = { navigation.pushNew(Config.Details) }
+        )
     }
 
     private fun createPrivacyNoticeDetailsComponent(
         componentContext: ComponentContext
     ): PrivacyNoticeDetailsComponent {
-        return DefaultPrivacyNoticeDetailsComponent(componentContext)
+        return DefaultPrivacyNoticeDetailsComponent(
+            componentContext = componentContext,
+            conferenceService = conferenceService,
+            mainDispatcher = mainDispatcher,
+            defaultDispatcher = defaultDispatcher,
+            globalLogger = globalLogger,
+            onBackButton = { navigation.pop() }
+        )
     }
 
     @Serializable

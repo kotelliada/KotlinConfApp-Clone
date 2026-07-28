@@ -13,4 +13,5 @@
 
 We will process your data in accordance with the App Privacy Notice. You can adjust or withdraw your consent at any time by sending a request to privacy@jetbrains.com, but doing so may affect how this app functions.</string>
     <string name="privacy_notice_read_action">Read the app privacy notice</string>
+    <string name="privacy_notice_back">Back</string>
 </resources>

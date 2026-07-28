@@ -62,7 +62,7 @@ object AppBindings {
             }
 
             install(Logging) {
-                level = LogLevel.ALL
+                level = LogLevel.HEADERS
                 logger = object: io.ktor.client.plugins.logging.Logger {
                     private val taggedLogger = globalLogger.withTag("HttpClient")
 

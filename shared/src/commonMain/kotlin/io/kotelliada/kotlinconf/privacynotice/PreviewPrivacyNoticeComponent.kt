@@ -4,8 +4,10 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.kotelliada.kotlinconf.privacynotice.main.PreviewPrivacyNoticeMainComponent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-class PreviewPrivacyNoticeComponent : PrivacyNoticeComponent {
+class PreviewPrivacyNoticeComponent(previewUiState: UiState) : PrivacyNoticeComponent {
 
     override val childStack: Value<ChildStack<*, PrivacyNoticeComponent.Child>> =
         MutableValue(
@@ -15,6 +17,8 @@ class PreviewPrivacyNoticeComponent : PrivacyNoticeComponent {
             )
         )
 
+    override val uiState: StateFlow<UiState> = MutableStateFlow(previewUiState)
+
     override fun onRejectNoticeClicked() {
     }
 
@@ -22,5 +26,8 @@ class PreviewPrivacyNoticeComponent : PrivacyNoticeComponent {
     }
 
     override fun onAppTermsOfUseClicked() {
+    }
+
+    override fun onRetryClicked() {
     }
 }

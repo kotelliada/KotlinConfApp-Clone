@@ -76,7 +76,13 @@ class DefaultRootComponent(
     private fun createOnboardingComponent(
         componentContext: ComponentContext
     ): OnboardingComponent {
-        return DefaultOnboardingComponent(componentContext)
+        return DefaultOnboardingComponent(
+            componentContext = componentContext,
+            conferenceService = appGraph.conferenceService,
+            mainDispatcher = appGraph.mainDispatcher,
+            defaultDispatcher = appGraph.defaultDispatcher,
+            globalLogger = appGraph.globalLogger
+        )
     }
 
     @Serializable
