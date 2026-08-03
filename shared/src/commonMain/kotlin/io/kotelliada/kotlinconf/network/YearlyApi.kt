@@ -20,8 +20,8 @@ import kotlinx.coroutines.CancellationException
 @SingleIn(AppScope::class)
 class YearlyApi(
     private val httpClient: HttpClient,
-    private val baseUrl: String = "http://127.0.0.1:8080", // iOS Simulator & Desktop
-    // private val baseUrl: String = "http://10.0.2.2:8080", // Android Emulator
+    // private val baseUrl: String = "http://127.0.0.1:8080", // iOS Simulator & Desktop
+    private val baseUrl: String = "http://10.0.2.2:8080", // Android Emulator
     private val globalLogger: Logger,
     private val year: Int = 2026
 ) {

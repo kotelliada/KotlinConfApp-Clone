@@ -20,7 +20,8 @@ import kotlinx.coroutines.launch
 class PrivacyNoticeViewModel(
     conferenceService: ConferenceService,
     mainDispatcher: MainCoroutineDispatcher,
-    private val logger: Logger
+    private val logger: Logger,
+    private val confirmationRequired: Boolean
 ) : InstanceKeeper.Instance {
 
     private val coroutineScope = CoroutineScope(mainDispatcher.immediate + SupervisorJob())
@@ -35,7 +36,7 @@ class PrivacyNoticeViewModel(
         logger.d { "PrivacyNoticeViewModel flatMapLatest" }
 
         flow {
-            emit(UiState.Loading)
+            emit(UiState.loadingState())
 
             val assetResult = conferenceService.getAsset("documents/app-privacy-notice.md")
             val newUiState = assetResponseToUiState(assetResult)
@@ -45,7 +46,7 @@ class PrivacyNoticeViewModel(
     }.stateIn(
         scope = coroutineScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = UiState.Loading
+        initialValue = UiState.loadingState()
     )
 
     fun onRetryClicked() {
@@ -53,6 +54,14 @@ class PrivacyNoticeViewModel(
         coroutineScope.launch {
             retryClicksFlow.emit(Unit)
         }
+    }
+
+    fun onRejectNoticeClicked() {
+
+    }
+
+    fun onAcceptNoticeClicked() {
+
     }
 
     override fun onDestroy() {
@@ -63,8 +72,8 @@ class PrivacyNoticeViewModel(
 
     private fun assetResponseToUiState(result: Result<String>): UiState {
         return when (result) {
-            is Result.Success -> UiState.Content(result.value)
-            is Result.Failure -> UiState.Error
+            is Result.Success -> UiState.contentState()
+            is Result.Failure -> UiState.errorState()
         }
     }
 }

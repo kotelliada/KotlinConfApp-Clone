@@ -25,8 +25,6 @@ class DefaultPrivacyNoticeComponent(
     private val mainDispatcher: MainCoroutineDispatcher,
     private val defaultDispatcher: CoroutineDispatcher,
     private val globalLogger: Logger,
-    private val onRejectNotice: () -> Unit,
-    private val onAcceptNotice: () -> Unit,
     private val onAppTermsOfUse: () -> Unit,
     private val confirmationRequired: Boolean,
 ) : ComponentContext by componentContext, PrivacyNoticeComponent {
@@ -48,7 +46,8 @@ class DefaultPrivacyNoticeComponent(
         PrivacyNoticeViewModel(
             conferenceService = conferenceService,
             mainDispatcher = mainDispatcher,
-            logger = logger
+            logger = logger,
+            confirmationRequired = confirmationRequired
         )
     }
 
@@ -58,12 +57,11 @@ class DefaultPrivacyNoticeComponent(
         }
 
     override fun onRejectNoticeClicked() {
+        viewModel.onRejectNoticeClicked()
     }
 
     override fun onAcceptNoticeClicked() {
-    }
-
-    override fun onAppTermsOfUseClicked() {
+        viewModel.onAcceptNoticeClicked()
     }
 
     override fun onRetryClicked() {

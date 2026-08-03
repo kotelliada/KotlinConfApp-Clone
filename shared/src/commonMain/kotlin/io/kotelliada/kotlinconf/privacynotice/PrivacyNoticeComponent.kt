@@ -15,8 +15,6 @@ interface PrivacyNoticeComponent {
 
     fun onAcceptNoticeClicked()
 
-    fun onAppTermsOfUseClicked()
-
     fun onRetryClicked()
 
     sealed class Child {

@@ -25,9 +25,6 @@ class PreviewPrivacyNoticeComponent(previewUiState: UiState) : PrivacyNoticeComp
     override fun onAcceptNoticeClicked() {
     }
 
-    override fun onAppTermsOfUseClicked() {
-    }
-
     override fun onRetryClicked() {
     }
 }

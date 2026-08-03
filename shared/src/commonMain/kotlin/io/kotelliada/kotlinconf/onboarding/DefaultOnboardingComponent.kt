@@ -50,9 +50,9 @@ class DefaultOnboardingComponent(
     ): PrivacyNoticeComponent {
         return DefaultPrivacyNoticeComponent(
             componentContext = componentContext,
-            onRejectNotice = {},
-            onAcceptNotice = {},
-            onAppTermsOfUse = {},
+            onAppTermsOfUse = {
+                // TODO: Implement
+            },
             confirmationRequired = false,
             conferenceService = conferenceService,
             mainDispatcher = mainDispatcher,

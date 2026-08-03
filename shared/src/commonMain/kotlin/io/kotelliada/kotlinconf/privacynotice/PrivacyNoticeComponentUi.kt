@@ -45,10 +45,10 @@ fun PrivacyNoticeComponentUi(
             .fillMaxSize()
             .background(color = KotlinConfTheme.colors.mainBackground)
     ) {
-        if (uiState is UiState.Loading || uiState is UiState.Error) {
+        if (uiState.isLoading || uiState.isError) {
             NormalErrorWithLoading(
                 errorMessage = "An error has occurred",
-                isLoading = uiState is UiState.Loading,
+                isLoading = uiState.isLoading,
                 onRetry = { component.onRetryClicked() },
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -115,7 +115,7 @@ private fun PrivacyNoticeComponentUiContent(
 private fun PrivacyNoticeComponentUiPreviewInLoadingState() {
     PreviewHelper(paddingEnabled = false) {
         PrivacyNoticeComponentUi(
-            component = PreviewPrivacyNoticeComponent(UiState.Loading)
+            component = PreviewPrivacyNoticeComponent(UiState.loadingState())
         )
     }
 }
@@ -125,7 +125,7 @@ private fun PrivacyNoticeComponentUiPreviewInLoadingState() {
 private fun PrivacyNoticeComponentUiPreviewInErrorState() {
     PreviewHelper(paddingEnabled = false) {
         PrivacyNoticeComponentUi(
-            component = PreviewPrivacyNoticeComponent(UiState.Error)
+            component = PreviewPrivacyNoticeComponent(UiState.errorState())
         )
     }
 }
@@ -135,7 +135,7 @@ private fun PrivacyNoticeComponentUiPreviewInErrorState() {
 private fun PrivacyNoticeComponentUiPreviewInContentState() {
     PreviewHelper(paddingEnabled = false) {
         PrivacyNoticeComponentUi(
-            component = PreviewPrivacyNoticeComponent(UiState.Content(""))
+            component = PreviewPrivacyNoticeComponent(UiState.contentState())
         )
     }
 }

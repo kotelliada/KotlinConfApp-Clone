@@ -13,7 +13,7 @@ class PreviewOnboardingComponent : OnboardingComponent {
             ChildStack(
                 configuration = Unit,
                 instance = OnboardingComponent.Child.PrivacyNotice(PreviewPrivacyNoticeComponent(
-                    UiState.Loading))
+                    UiState.loadingState()))
             )
         )
 }
