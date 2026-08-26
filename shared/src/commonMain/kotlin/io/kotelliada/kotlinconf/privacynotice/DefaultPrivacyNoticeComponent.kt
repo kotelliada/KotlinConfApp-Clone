@@ -67,8 +67,11 @@ class DefaultPrivacyNoticeComponent(
                 super.onStart()
                 effectsJob = retainedLogic.coroutineScope.launch {
                     retainedLogic.store.effects
-                        .collect {
-                            println("Received effect: $it")
+                        .collect { effect ->
+                            when (effect) {
+                                is PrivacyNoticeComponent.Effect.PrivacyAccepted -> onPrivacyAccepted()
+                                is PrivacyNoticeComponent.Effect.PrivacyRejected -> onPrivacyRejected()
+                            }
                         }
                 }
             }

@@ -81,7 +81,11 @@ class DefaultRootComponent(
             conferenceService = appGraph.conferenceService,
             mainDispatcher = appGraph.mainDispatcher,
             defaultDispatcher = appGraph.defaultDispatcher,
-            globalLogger = appGraph.globalLogger
+            globalLogger = appGraph.globalLogger,
+            onOnboardingCompleted = {
+                logger.d { "Requested to complete onboarding from OnboardingComponent" }
+                navigation.replaceAll(Config.Home)
+            }
         )
     }
 
