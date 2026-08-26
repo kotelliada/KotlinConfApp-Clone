@@ -53,11 +53,12 @@ class DefaultOnboardingComponent(
             onAppTermsOfUse = {
                 // TODO: Implement
             },
-            confirmationRequired = false,
             conferenceService = conferenceService,
             mainDispatcher = mainDispatcher,
             globalLogger = globalLogger,
-            defaultDispatcher = defaultDispatcher
+            defaultDispatcher = defaultDispatcher,
+            onPrivacyAccepted = {},
+            onPrivacyRejected = {}
         )
     }
 

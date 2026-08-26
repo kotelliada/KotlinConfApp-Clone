@@ -4,6 +4,7 @@
 
     <!-- Actions -->
     <string name="action_error_reload">Reload</string>
+    <string name="action_close">Close</string>
 
     <string name="privacy_notice_reject">Reject</string>
     <string name="privacy_notice_accept">Accept</string>

@@ -1,15 +1,15 @@
 package io.kotelliada.kotlinconf.privacynotice
 
 data class UiState(
-    val isLoading: Boolean,
-    val isError: Boolean,
-    val isContent: Boolean
-) {
-    companion object {
-        fun loadingState() = UiState(isLoading = true, isError = false, isContent = false)
+    val isDocumentLoading: Boolean = false,
+    val isDocumentLoadingError: Boolean = false,
+    val isDocumentReady: Boolean = false,
 
-        fun errorState() = UiState(isLoading = false, isError = true, isContent = false)
+    val isAcceptingPrivacy: Boolean = false,
+    val isAcceptingPrivacyError: Boolean = false,
+    val isAcceptingPrivacyAvailable: Boolean = false,
 
-        fun contentState() = UiState(isLoading = false, isError = false, isContent = true)
-    }
-}
+    val isRejectingPrivacy: Boolean = false,
+    val isRejectingPrivacyError: Boolean = false,
+    val isRejectingPrivacyAvailable: Boolean = false,
+)

@@ -4,7 +4,9 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class InMemoryYearlyStorageTest {
     private lateinit var sut: InMemoryYearlyStorage
@@ -32,5 +34,30 @@ class InMemoryYearlyStorageTest {
 
         assertEquals(asset1Body, actualAsset1)
         assertNull(actualAsset2)
+    }
+
+    @Test
+    fun `isPolicySigned returns false by default`() = runTest {
+        val actual = sut.isPolicySigned()
+
+        assertFalse(actual)
+    }
+
+    @Test
+    fun `setPolicySigned stores passed value (case 1)`() = runTest {
+        sut.setPolicySigned(true)
+
+        val actual = sut.isPolicySigned()
+
+        assertTrue(actual)
+    }
+
+    @Test
+    fun `setPolicySigned stores passed value (case 2)`() = runTest {
+        sut.setPolicySigned(false)
+
+        val actual = sut.isPolicySigned()
+
+        assertFalse(actual)
     }
 }

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -25,7 +24,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import io.kotelliada.kotlinconf.privacynotice.details.PrivacyNoticeDetailsComponentUi
 import io.kotelliada.kotlinconf.privacynotice.main.PrivacyNoticeMainComponentUi
 import io.kotelliada.kotlinconf.ui.components.Button
-import io.kotelliada.kotlinconf.ui.components.NormalErrorWithLoading
+import io.kotelliada.kotlinconf.ui.components.DialogErrorLoading
 import io.kotelliada.kotlinconf.ui.theme.KotlinConfTheme
 import io.kotelliada.kotlinconf.ui.theme.PreviewHelper
 import kotlinconfclone.shared.generated.resources.Res
@@ -45,17 +44,38 @@ fun PrivacyNoticeComponentUi(
             .fillMaxSize()
             .background(color = KotlinConfTheme.colors.mainBackground)
     ) {
-        if (uiState.isLoading || uiState.isError) {
-            NormalErrorWithLoading(
-                errorMessage = "An error has occurred",
-                isLoading = uiState.isLoading,
-                onRetry = { component.onRetryClicked() },
-                modifier = Modifier.align(Alignment.Center)
+        PrivacyNoticeComponentUiContent(
+            component = component,
+            uiState = uiState,
+            modifier = Modifier
+        )
+
+        if (uiState.isDocumentLoading || uiState.isDocumentLoadingError) {
+            DialogErrorLoading(
+                errorMessage = "Loading document failed",
+                loadingText = "Loading document...",
+                isLoading = uiState.isDocumentLoading,
+                onRetry = { component.onReloadDocumentClicked() },
             )
-        } else {
-            PrivacyNoticeComponentUiContent(
-                component = component,
-                modifier = modifier.background(color = KotlinConfTheme.colors.mainBackground)
+        }
+
+        if (uiState.isAcceptingPrivacy || uiState.isAcceptingPrivacyError) {
+            DialogErrorLoading(
+                errorMessage = "Accepting privacy failed",
+                loadingText = "Accepting privacy...",
+                isLoading = uiState.isAcceptingPrivacy,
+                onRetry = { component.onAcceptNoticeClicked() },
+                onClose = { component.closeLoadingDialogClicked() }
+            )
+        }
+
+        if (uiState.isRejectingPrivacy || uiState.isRejectingPrivacyError) {
+            DialogErrorLoading(
+                errorMessage = "Rejecting privacy failed",
+                loadingText = "Rejecting privacy...",
+                isLoading = uiState.isRejectingPrivacy,
+                onRetry = { component.onRejectNoticeClicked() },
+                onClose = { component.closeLoadingDialogClicked() }
             )
         }
     }
@@ -64,7 +84,8 @@ fun PrivacyNoticeComponentUi(
 @Composable
 private fun PrivacyNoticeComponentUiContent(
     component: PrivacyNoticeComponent,
-    modifier: Modifier = Modifier
+    uiState: UiState,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Children(
@@ -97,14 +118,16 @@ private fun PrivacyNoticeComponentUiContent(
         ) {
             Button(
                 label = stringResource(Res.string.privacy_notice_reject),
-                onClick = { component.onRejectNoticeClicked() }
+                onClick = { component.onRejectNoticeClicked() },
+                enabled = uiState.isDocumentReady && uiState.isRejectingPrivacyAvailable
             )
 
             Button(
                 label = stringResource(Res.string.privacy_notice_accept),
                 onClick = { component.onAcceptNoticeClicked() },
                 modifier = Modifier.weight(1F),
-                primary = true
+                primary = true,
+                enabled = uiState.isDocumentReady && uiState.isAcceptingPrivacyAvailable
             )
         }
     }
@@ -115,7 +138,7 @@ private fun PrivacyNoticeComponentUiContent(
 private fun PrivacyNoticeComponentUiPreviewInLoadingState() {
     PreviewHelper(paddingEnabled = false) {
         PrivacyNoticeComponentUi(
-            component = PreviewPrivacyNoticeComponent(UiState.loadingState())
+            component = PreviewPrivacyNoticeComponent(UiState(isDocumentLoading = true))
         )
     }
 }
@@ -125,7 +148,7 @@ private fun PrivacyNoticeComponentUiPreviewInLoadingState() {
 private fun PrivacyNoticeComponentUiPreviewInErrorState() {
     PreviewHelper(paddingEnabled = false) {
         PrivacyNoticeComponentUi(
-            component = PreviewPrivacyNoticeComponent(UiState.errorState())
+            component = PreviewPrivacyNoticeComponent(UiState(isDocumentLoadingError = true))
         )
     }
 }
@@ -135,7 +158,7 @@ private fun PrivacyNoticeComponentUiPreviewInErrorState() {
 private fun PrivacyNoticeComponentUiPreviewInContentState() {
     PreviewHelper(paddingEnabled = false) {
         PrivacyNoticeComponentUi(
-            component = PreviewPrivacyNoticeComponent(UiState.contentState())
+            component = PreviewPrivacyNoticeComponent(UiState(isDocumentReady = true))
         )
     }
 }

@@ -20,6 +20,19 @@ class ConferenceService(
     private val yearlyStorage: YearlyStorage
 ) {
 
+    suspend fun acceptPrivacyNotice(): Result<Unit> {
+        awaitAppInitialization()
+
+        val userId = applicationStorage.userId.first()
+        val result = yearlyApi.acceptPrivacyNotice(userId)
+
+        if (result is Result.Success) {
+            yearlyStorage.setPolicySigned(true)
+        }
+
+        return result
+    }
+
     suspend fun getAsset(path: String): Result<String> {
         awaitAppInitialization()
 

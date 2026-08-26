@@ -75,6 +75,7 @@ kotlin {
             implementation(libs.androidx.datastore.preferences.core)
             api(libs.decompose)
             implementation(libs.decompose.extensionsCompose)
+            implementation(libs.essenty.lifecycleCoroutines)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kermit)
             implementation(libs.kotlinx.coroutines.core)

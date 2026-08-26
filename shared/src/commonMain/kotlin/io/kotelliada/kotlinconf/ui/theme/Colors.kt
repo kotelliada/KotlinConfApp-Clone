@@ -35,6 +35,8 @@ data class Colors(
 
     val toggleOn: Color,
     val toggleOff: Color,
+
+    val dialogBackground: Color,
 )
 
 val KotlinConfLightColors = Colors(
@@ -70,6 +72,8 @@ val KotlinConfLightColors = Colors(
 
     toggleOff = UI.grey400,
     toggleOn = Brand.purple100,
+
+    dialogBackground = Color(0x80C2C2C2),
 )
 
 val KotlinConfDarkColors = Colors(
@@ -105,6 +109,8 @@ val KotlinConfDarkColors = Colors(
 
     toggleOff = UI.grey500,
     toggleOn = Brand.purpleTextDark,
+
+    dialogBackground = Color(0x80686868),
 )
 
 val GoldenKodeeColors = KotlinConfDarkColors.copy(

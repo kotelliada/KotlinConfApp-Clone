@@ -60,14 +60,14 @@ fun NormalErrorWithLoading(
 }
 
 @Composable
-private fun ErrorText(
+fun ErrorText(
     message: String,
     modifier: Modifier = Modifier,
 ) {
     Text(
         text = message,
         color = KotlinConfTheme.colors.secondaryText,
-        modifier = Modifier.widthIn(max = 220.dp),
+        modifier = modifier.widthIn(max = 220.dp),
         style = KotlinConfTheme.typography.text1.copy(
             textAlign = TextAlign.Center
         )
