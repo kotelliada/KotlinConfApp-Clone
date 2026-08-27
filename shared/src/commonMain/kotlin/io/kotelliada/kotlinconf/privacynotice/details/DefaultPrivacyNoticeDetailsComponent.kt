@@ -7,8 +7,6 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.mikepenz.markdown.model.State
 import com.mikepenz.markdown.model.parseMarkdownFlow
 import io.kotelliada.kotlinconf.ConferenceService
-import io.kotelliada.kotlinconf.utils.Result
-import io.kotelliada.kotlinconf.utils.UnknownError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,7 +16,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 
@@ -53,23 +50,17 @@ private class RetainedLogic(
 
     val coroutineScope = CoroutineScope(mainDispatcher.immediate + SupervisorJob())
 
-    val uiState: StateFlow<State> = flow {
-        val asset = conferenceService.getAsset("documents/app-privacy-notice.md")
-        emit(asset)
-    }
-        .flatMapLatest { result ->
-            if (result is Result.Success) {
-                parseMarkdownFlow(result.value)
-            } else {
-                flow { emit(State.Error(UnknownError())) }
+    val uiState: StateFlow<State> =
+        conferenceService.observeAsset("documents/app-privacy-notice.md")
+            .flatMapLatest { privacyNotice ->
+                parseMarkdownFlow(privacyNotice)
             }
-        }
-        .flowOn(defaultDispatcher)
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = State.Loading()
-        )
+            .flowOn(defaultDispatcher)
+            .stateIn(
+                scope = coroutineScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = State.Loading()
+            )
 
     override fun onDestroy() {
         super.onDestroy()

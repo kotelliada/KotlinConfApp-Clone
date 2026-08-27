@@ -8,7 +8,10 @@ import io.kotelliada.kotlinconf.storage.ApplicationStorage
 import io.kotelliada.kotlinconf.storage.YearlyStorage
 import io.kotelliada.kotlinconf.utils.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SingleIn(AppScope::class)
@@ -49,6 +52,14 @@ class ConferenceService(
         }
 
         return downloadedAsset
+    }
+
+    fun observeAsset(name: String): Flow<String> {
+        return appInitializer.isAppInitializedFlow
+            .filter { it }
+            .flatMapLatest {
+                yearlyStorage.observeAsset(name)
+            }
     }
 
     suspend fun isOnboardingComplete(): Boolean {
