@@ -12,8 +12,6 @@ import io.kotelliada.kotlinconf.home.HomeComponent
 import io.kotelliada.kotlinconf.onboarding.DefaultOnboardingComponent
 import io.kotelliada.kotlinconf.onboarding.OnboardingComponent
 import io.kotelliada.kotlinconf.utils.ComponentLifecycleLogger
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 class DefaultRootComponent(
@@ -41,13 +39,6 @@ class DefaultRootComponent(
             }
 
         lifecycle.subscribe(componentLifecycleLogger)
-
-        appGraph.appCoroutineScope.launch {
-            appGraph.appInitializer.isAppInitializedFlow
-                .first { it }
-
-            logger.d { "App has been initialized" }
-        }
     }
 
     private fun createChild(

@@ -9,23 +9,18 @@ import io.kotelliada.kotlinconf.storage.YearlyStorage
 import io.kotelliada.kotlinconf.utils.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SingleIn(AppScope::class)
 @Inject
 class ConferenceService(
-    private val appInitializer: AppInitializer,
     private val applicationStorage: ApplicationStorage,
     private val yearlyApi: YearlyApi,
     private val yearlyStorage: YearlyStorage
 ) {
 
     suspend fun acceptPrivacyNotice(): Result<Unit> {
-        awaitAppInitialization()
-
         val userId = applicationStorage.userId.first()
         val result = yearlyApi.acceptPrivacyNotice(userId)
 
@@ -37,8 +32,6 @@ class ConferenceService(
     }
 
     suspend fun getAsset(path: String): Result<String> {
-        awaitAppInitialization()
-
         val cachedAsset = yearlyStorage.getAsset(path)
         if (cachedAsset != null) {
             return Result.Success(cachedAsset)
@@ -55,25 +48,14 @@ class ConferenceService(
     }
 
     fun observeAsset(name: String): Flow<String> {
-        return appInitializer.isAppInitializedFlow
-            .filter { it }
-            .flatMapLatest {
-                yearlyStorage.observeAsset(name)
-            }
+        return yearlyStorage.observeAsset(name)
     }
 
     suspend fun isOnboardingComplete(): Boolean {
-        awaitAppInitialization()
         return applicationStorage.isOnboardingComplete().first()
     }
 
     suspend fun completeOnboarding() {
-        awaitAppInitialization()
         applicationStorage.setOnboardingComplete(true)
-    }
-
-    private suspend fun awaitAppInitialization() {
-        appInitializer.isAppInitializedFlow
-            .first { it }
     }
 }

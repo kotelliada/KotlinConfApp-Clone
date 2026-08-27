@@ -12,11 +12,10 @@ import io.kotelliada.kotlinconf.getPlatform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlin.uuid.ExperimentalUuidApi
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.transform
 import kotlin.uuid.Uuid
 
 // @ContributesBinding automatically binds your implementation to its interface
@@ -32,9 +31,27 @@ class ApplicationStorageImpl(
     private val keyUserId = stringPreferencesKey("userId")
     private val keyOnboardingComplete = booleanPreferencesKey("onboardingComplete")
 
-    override val userId: StateFlow<String> = settings.data
-        .map { preferences -> preferences[keyUserId] ?: "" }
-        .stateIn(appScope, SharingStarted.Eagerly, "")
+    override val userId: Flow<String> = settings.data
+        .transform {preferences ->
+            val existingUserId = preferences[keyUserId]
+
+            if (existingUserId.isNullOrBlank()) {
+                val generatedUserId = "${getPlatform().id}-${Uuid.random()}"
+                settings.updateData {
+                    it.toMutablePreferences().also { mutablePreferences ->
+                        mutablePreferences[keyUserId] = generatedUserId
+                    }
+                }
+            } else {
+                emit(existingUserId)
+            }
+        }
+        .distinctUntilChanged()
+        .shareIn(
+            scope = appScope,
+            started = SharingStarted.Lazily,
+            replay = 1
+        )
 
     override fun isOnboardingComplete(): Flow<Boolean> {
         return settings.data
@@ -45,22 +62,6 @@ class ApplicationStorageImpl(
         settings.updateData {
             it.toMutablePreferences().also { preferences ->
                 preferences[keyOnboardingComplete] = value
-            }
-        }
-    }
-
-    @OptIn(ExperimentalUuidApi::class)
-    override suspend fun initialize() {
-        val existingUserId = settings.data
-            .map { preferences -> preferences[keyUserId] ?: "" }
-            .first()
-
-        if (existingUserId.isBlank()) {
-            val generatedUserId = "${getPlatform().id}-${Uuid.random()}"
-            settings.updateData {
-                it.toMutablePreferences().also { preferences ->
-                    preferences[keyUserId] = generatedUserId
-                }
             }
         }
     }
