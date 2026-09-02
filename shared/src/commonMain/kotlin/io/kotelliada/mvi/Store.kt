@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -21,13 +20,12 @@ class Store<Action, State, Effect>(
     private val mainDispatcher: MainCoroutineDispatcher,
     initialState: State
 ) {
-    private val _state = MutableStateFlow(initialState)
-
     private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 64)
 
     private val _effects = Channel<Effect>(capacity = Channel.BUFFERED)
 
-    val state: StateFlow<State> = _state.asStateFlow()
+    val state: StateFlow<State>
+        field = MutableStateFlow(initialState)
 
     val effects: Flow<Effect> = _effects.receiveAsFlow()
 
@@ -35,14 +33,14 @@ class Store<Action, State, Effect>(
         coroutineScope.launch(start = CoroutineStart.UNDISPATCHED) {
             launch(start = CoroutineStart.UNDISPATCHED) {
                 actions.collect { action ->
-                    _state.update { currentState ->
+                    state.update { currentState ->
                         reducer.reduce(currentState, action)
                     }
                 }
             }
 
             launch(start = CoroutineStart.UNDISPATCHED) {
-                middlewares.map { it.bind(actions, _state, ::emitEffect) }
+                middlewares.map { it.bind(actions, state, ::emitEffect) }
                     .merge()
                     .collect { action ->
                         actions.emit(action)
