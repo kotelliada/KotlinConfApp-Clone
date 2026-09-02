@@ -5,7 +5,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import io.kotelliada.kotlinconf.utils.Result
-import io.kotelliada.kotlinconf.utils.UnknownError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
@@ -15,9 +14,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
 import io.ktor.http.encodedPath
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
-import kotlinx.coroutines.CancellationException
 
 @Inject
 @SingleIn(AppScope::class)
@@ -28,28 +25,27 @@ class YearlyApi(
     private val globalLogger: Logger,
     private val year: Int = 2026
 ) {
-
     private val logger = globalLogger.withTag("YearlyApi")
 
     suspend fun acceptPrivacyNotice(userId: String): Result<Unit> {
-        return safeApiCall {
-            val httpResponse = httpClient.post {
-                apiUrl(userId, "sign")
-                setBody(userId)
-            }
-
-            return@safeApiCall if (httpResponse.status.isSuccess()) {
-                Unit
-            } else {
-                throw RuntimeException("Bad status code: ${httpResponse.status}")
-            }
-        }
+        return httpClient.safeApiCall(
+            logger = logger,
+            request = {
+                post {
+                    apiUrl(userId, "sign")
+                    setBody(userId)
+                }
+            },
+            onSuccessBodyParser = { }
+        )
     }
 
     suspend fun downloadAsset(userId: String, path: String): Result<String> {
-        return safeApiCall {
-            httpClient.get { apiUrl(userId, path) }.bodyAsText()
-        }
+        return httpClient.safeApiCall(
+            logger = logger,
+            request = { get { apiUrl(userId, path) } },
+            onSuccessBodyParser = { bodyAsText() }
+        )
     }
 
     private fun HttpRequestBuilder.apiUrl(userId: String, path: String) {
@@ -58,20 +54,6 @@ class YearlyApi(
         url {
             takeFrom(baseUrl)
             encodedPath = "$year/$path"
-        }
-    }
-
-    private suspend fun <T> safeApiCall(call: suspend () -> T): Result<T> {
-        return try {
-            // TODO: Add status codes mapping
-            val response = call()
-            Result.Success(response)
-        } catch (ex: CancellationException) {
-            throw ex
-        } catch (ex: Throwable) {
-            // TODO: Add errors mapping
-            logger.e { "API call failed: ${ex.message}" }
-            Result.Failure(UnknownError("Something went wrong: ${ex.message}"))
         }
     }
 }
