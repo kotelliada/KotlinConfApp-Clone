@@ -46,11 +46,11 @@ class DefaultOnboardingComponent(
         componentContext: ComponentContext
     ): OnboardingComponent.Child {
         return when (config) {
-            is Config.PrivacyNotice -> OnboardingComponent.Child.PrivacyNotice(
+            is PrivacyNotice -> OnboardingComponent.Child.PrivacyNotice(
                 createPrivacyNoticeComponent(componentContext)
             )
 
-            is Config.Notifications -> OnboardingComponent.Child.Notifications()
+            is Notifications -> OnboardingComponent.Child.Notifications()
         }
     }
 

@@ -109,8 +109,8 @@ class DefaultPrivacyNoticeComponent(
         componentContext: ComponentContext
     ): PrivacyNoticeComponent.Child {
         return when (config) {
-            is Config.Main -> PrivacyNoticeComponent.Child.Main(createPrivacyNoticeMainComponent(componentContext))
-            is Config.Details -> PrivacyNoticeComponent.Child.Details(createPrivacyNoticeDetailsComponent(componentContext))
+            is Main -> PrivacyNoticeComponent.Child.Main(createPrivacyNoticeMainComponent(componentContext))
+            is Details -> PrivacyNoticeComponent.Child.Details(createPrivacyNoticeDetailsComponent(componentContext))
         }
     }
 

@@ -105,6 +105,10 @@ kotlin {
         }
     }
 
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-sensitive-resolution")
+    }
+
     // jvmToolchain(21)
 }
 

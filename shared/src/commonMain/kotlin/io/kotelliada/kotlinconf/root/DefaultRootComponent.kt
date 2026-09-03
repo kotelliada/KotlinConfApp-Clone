@@ -46,8 +46,8 @@ class DefaultRootComponent(
         componentContext: ComponentContext
     ): RootComponent.Child {
         return when (config) {
-            is Config.Home -> RootComponent.Child.Home(createHomeComponent(componentContext))
-            is Config.Onboarding -> RootComponent.Child.Onboarding(
+            is Home -> RootComponent.Child.Home(createHomeComponent(componentContext))
+            is Onboarding -> RootComponent.Child.Onboarding(
                 createOnboardingComponent(componentContext)
             )
         }
